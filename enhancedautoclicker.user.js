@@ -206,7 +206,7 @@ function autoClicker() {
         // Click while in a normal battle
         if (App.game.gameState == GameConstants.GameState.fighting) {
             Battle.clickAttack();
-            App.game.breeding.progressEggs(500);
+            App.game.breeding.progressEggs(50);
         }
 
         //Auto Gym checking
