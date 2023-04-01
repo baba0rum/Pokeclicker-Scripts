@@ -325,7 +325,7 @@ function autoHatcher() {
             }
 
         }
-    }, 50); // Runs every game tick
+    }, 150); // Runs every game tick
 }
 
 if (!validParse(localStorage.getItem('autoHatchState'))) {
