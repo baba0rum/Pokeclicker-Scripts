@@ -81,7 +81,7 @@ function initAutoBattleItems() {
                     }
                 }
             }
-        }, 500);
+        }, 1000);
     }
 
     if (battleItemState) { ABItems(); }
