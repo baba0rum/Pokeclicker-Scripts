@@ -5,7 +5,7 @@
 // @description   Clicks through battles appropriately depending on the game state. Also, includes a toggle button to turn Auto Clicking on or off and various insightful statistics. Now also includes an automatic Gym battler as well as Auto Dungeon with different modes, as well as being able to adjust the speed at which the Auto CLicker can click at.
 // @copyright     https://github.com/Ephenia
 // @license       GPL-3.0 License
-// @version       30
+// @version       31
 
 // @homepageURL   https://github.com/Ephenia/Pokeclicker-Scripts/
 // @supportURL    https://github.com/Ephenia/Pokeclicker-Scripts/issues
@@ -46,7 +46,9 @@ function initAutoClicker() {
     <button id="auto-click-start" class="btn btn-${clickState ? 'success' : 'danger'} btn-block" style="font-size:8pt;">
     Auto Click [${clickState ? 'ON' : 'OFF'}]<br>
     <div id="auto-click-info">
-</div>
+    <div id="click-DPS">Auto Click DPS:<br><div style="font-weight:bold;color:gold;">${clickDPS.toLocaleString('en-US')}</div></div>
+    <div id="req-DPS">Req. DPS:<br><div style="font-weight:bold;">0</div></div>
+    <div id="enemy-DPS">Enemy/s:<br><div style="font-weight:bold;color:black;">0</div></div>
     </div>
     </button>
     <div id="click-delay-cont">
@@ -118,7 +120,9 @@ function toggleAutoClick() {
     clickState ? element.classList.replace('btn-danger', 'btn-success') : element.classList.replace('btn-success', 'btn-danger');
     element.innerHTML = `Auto Click [${clickState ? 'ON' : 'OFF'}]<br>
     <div id="auto-click-info">
-    </div>
+    <div id="click-DPS">Auto Click DPS:<br><div style="font-weight:bold;color:gold;">${clickDPS.toLocaleString('en-US')}</div></div>
+    <div id="req-DPS">Req. DPS:<br><div style="font-weight:bold;">0</div></div>
+    <div id="enemy-DPS">Enemy/s:<br><div style="font-weight:bold;color:black;">0</div></div>
     </div>`
     localStorage.setItem('autoClickState', clickState);
 }
@@ -157,6 +161,42 @@ function changeSelectedDungeon(event) {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
+}
+
+function calcClickDPS() {
+    autoClickDPS = setInterval(function () {
+        const clickSec = window.testDPS;
+        let enemyHealth;
+        try {
+            enemyHealth = Battle.enemyPokemon().maxHealth();
+        }
+        catch (err) {
+            enemyHealth = 0;
+        }
+        if (clickDPS != App.game.party.calculateClickAttack() * clickSec) {
+            clickDPS = App.game.party.calculateClickAttack() * clickSec;
+            document.getElementById('click-DPS').innerHTML = `Auto Click DPS:<br><div style="font-weight:bold;color:gold;">${Math.floor(clickDPS).toLocaleString('en-US')}</div>`
+            localStorage.setItem('storedClickDPS', clickDPS)
+        }
+        if (reqDPS != enemyHealth * clickSec) {
+            reqDPS = enemyHealth * clickSec;
+            document.getElementById('req-DPS').innerHTML = `Req. DPS:<br><div style="font-weight:bold;color: ${clickDPS >= reqDPS ? 'greenyellow' : 'darkred'}">${Math.ceil(reqDPS).toLocaleString('en-US')}</div>`
+        }
+        if (enemySpeedRaw != ((App.game.party.calculateClickAttack() * clickSec) / enemyHealth).toFixed(1)) {
+            enemySpeed = ((App.game.party.calculateClickAttack() * clickSec) / enemyHealth);
+            enemySpeedRaw = enemySpeed;
+            if (isNaN(enemySpeedRaw) || enemySpeedRaw == 'Infinity' || Battle.catching()) {
+                enemySpeed = 0;
+            }
+            if (enemySpeedRaw >= clickSec && enemySpeedRaw != 'Infinity' && !Battle.catching()) {
+                enemySpeed = window.defeatDPS;
+            }
+            if (!Number.isInteger(enemySpeed) && enemySpeed != 0) { enemySpeed = enemySpeed.toFixed(1).toString().replace('.0', '') }
+            document.getElementById('enemy-DPS').innerHTML = `Enemy/s:<br><div style="font-weight:bold;color:black;">${enemySpeed}</div>`
+        }
+        window.testDPS = 0;
+        window.defeatDPS = 0;
+    }, 1000);
 }
 
 function autoClicker() {
