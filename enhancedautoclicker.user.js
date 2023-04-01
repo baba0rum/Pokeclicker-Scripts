@@ -102,7 +102,6 @@ function initAutoClicker() {
 
     if (clickState) {
         autoClicker();
-        calcClickDPS();
     }
     overideClickAttack();
 }
@@ -111,7 +110,6 @@ function toggleAutoClick() {
     const element = document.getElementById('auto-click-start');
     clickState = !clickState;
     clickState ? autoClicker() : clearInterval(autoClickerLoop);
-    clickState ? calcClickDPS() : clearInterval(autoClickDPS);
     if (clickState) {
         clickDPS = JSON.parse(localStorage.getItem('storedClickDPS'));
     } else {
@@ -163,42 +161,6 @@ function changeSelectedDungeon(event) {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
-}
-
-function calcClickDPS() {
-    autoClickDPS = setInterval(function () {
-        const clickSec = window.testDPS;
-        let enemyHealth;
-        try {
-            enemyHealth = Battle.enemyPokemon().maxHealth();
-        }
-        catch (err) {
-            enemyHealth = 0;
-        }
-        if (clickDPS != App.game.party.calculateClickAttack() * clickSec) {
-            clickDPS = App.game.party.calculateClickAttack() * clickSec;
-            document.getElementById('click-DPS').innerHTML = `Auto Click DPS:<br><div style="font-weight:bold;color:gold;">${Math.floor(clickDPS).toLocaleString('en-US')}</div>`
-            localStorage.setItem('storedClickDPS', clickDPS)
-        }
-        if (reqDPS != enemyHealth * clickSec) {
-            reqDPS = enemyHealth * clickSec;
-            document.getElementById('req-DPS').innerHTML = `Req. DPS:<br><div style="font-weight:bold;color: ${clickDPS >= reqDPS ? 'greenyellow' : 'darkred'}">${Math.ceil(reqDPS).toLocaleString('en-US')}</div>`
-        }
-        if (enemySpeedRaw != ((App.game.party.calculateClickAttack() * clickSec) / enemyHealth).toFixed(1)) {
-            enemySpeed = ((App.game.party.calculateClickAttack() * clickSec) / enemyHealth);
-            enemySpeedRaw = enemySpeed;
-            if (isNaN(enemySpeedRaw) || enemySpeedRaw == 'Infinity' || Battle.catching()) {
-                enemySpeed = 0;
-            }
-            if (enemySpeedRaw >= clickSec && enemySpeedRaw != 'Infinity' && !Battle.catching()) {
-                enemySpeed = window.defeatDPS;
-            }
-            if (!Number.isInteger(enemySpeed) && enemySpeed != 0) { enemySpeed = enemySpeed.toFixed(1).toString().replace('.0', '') }
-            document.getElementById('enemy-DPS').innerHTML = `Enemy/s:<br><div style="font-weight:bold;color:black;">${enemySpeed}</div>`
-        }
-        window.testDPS = 0;
-        window.defeatDPS = 0;
-    }, 1000);
 }
 
 function autoClicker() {
