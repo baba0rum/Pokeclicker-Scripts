@@ -80,7 +80,7 @@ function initBattleFrontier() {
                 document.getElementById('bf-one-click-btn').remove();
                 clearInterval(awaitFloorReset);
             }
-        }, 50);
+        }, 200);
     }
 
     function createHTML() {
