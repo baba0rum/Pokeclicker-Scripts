@@ -5,7 +5,7 @@
 // @description   Removes the limit for the number of quests you can do at once and auto completes/starts new ones.
 // @copyright     https://github.com/Ephenia
 // @license       GPL-3.0 License
-// @version       1.2
+// @version       1.3
 
 // @homepageURL   https://github.com/Ephenia/Pokeclicker-Scripts/
 // @supportURL    https://github.com/Ephenia/Pokeclicker-Scripts/issues
@@ -103,7 +103,7 @@ function initAutoQuests(){
                 }
             })
         }
-    }, 500)
+    }, 2000)
 
     function resetQuestModify() {
         //Selecting Quest list in Quest Modal and adding click listeners
