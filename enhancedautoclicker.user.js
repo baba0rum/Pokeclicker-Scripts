@@ -46,6 +46,9 @@ function initAutoClicker() {
     <button id="auto-click-start" class="btn btn-${clickState ? 'success' : 'danger'} btn-block" style="font-size:8pt;">
     Auto Click [${clickState ? 'ON' : 'OFF'}]<br>
     <div id="auto-click-info">
+    <div id="click-DPS">Auto Click DPS:<br><div style="font-weight:bold;color:gold;">${clickDPS.toLocaleString('en-US')}</div></div>
+    <div id="req-DPS">Req. DPS:<br><div style="font-weight:bold;">0</div></div>
+    <div id="enemy-DPS">Enemy/s:<br><div style="font-weight:bold;color:black;">0</div></div>
     </div>
     </button>
     <div id="click-delay-cont">
@@ -117,6 +120,9 @@ function toggleAutoClick() {
     clickState ? element.classList.replace('btn-danger', 'btn-success') : element.classList.replace('btn-success', 'btn-danger');
     element.innerHTML = `Auto Click [${clickState ? 'ON' : 'OFF'}]<br>
     <div id="auto-click-info">
+    <div id="click-DPS">Auto Click DPS:<br><div style="font-weight:bold;color:gold;">${clickDPS.toLocaleString('en-US')}</div></div>
+    <div id="req-DPS">Req. DPS:<br><div style="font-weight:bold;">0</div></div>
+    <div id="enemy-DPS">Enemy/s:<br><div style="font-weight:bold;color:black;">0</div></div>
     </div>`
     localStorage.setItem('autoClickState', clickState);
 }
