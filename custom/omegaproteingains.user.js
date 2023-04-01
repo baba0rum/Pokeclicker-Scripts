@@ -55,7 +55,7 @@ function initOmegaProtein() {
                     event.stopImmediatePropagation();
                 }
             }
-        }, 50);
+        }, 150);
     }
 }
 
