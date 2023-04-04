@@ -51,6 +51,7 @@ function initBallAdjust() {
         for (var i = 0; i < getBalls.length; i++) {
             if (ballAdjuster == "true") {
                 getBalls[i].catchTime = 0;
+                App.game.multiplier.addBonus('clickAttack', () => 5);
             } else {
                 getBalls[i].catchTime = defaultTime[i];
             }
